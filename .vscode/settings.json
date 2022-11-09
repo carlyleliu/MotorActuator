@@ -17,7 +17,9 @@
         "functional": "c",
         "__locale": "c",
         "valarray": "c",
-        "pwm_curr_fdbk.h": "c"
+        "pwm_curr_fdbk.h": "c",
+        "peripherals.h": "c",
+        "arm_common_tables.h": "c"
     },
     "git.ignoreLimitWarning": true,
     "editor.formatOnSave": true

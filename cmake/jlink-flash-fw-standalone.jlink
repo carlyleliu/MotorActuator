@@ -1,0 +1,4 @@
+h
+loadfile Robotchissis.hex, 0x8000000
+r
+q
