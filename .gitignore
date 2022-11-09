@@ -1,0 +1,13 @@
+#ignore these file
+build/*
+*.ioc
+*.DS_Store
+.DS_Store
+tags
+cscope*
+Drivers/.DS_Store
+Drivers/STM32F1xx_HAL_Driver/.DS_Store
+tags
+
+
+

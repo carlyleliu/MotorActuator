@@ -1,0 +1,24 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "icm20602.h": "c",
+        "as5600.h": "c",
+        "speed_pos_fdbk.h": "c",
+        "digital_output.h": "c",
+        "mc_type.h": "c",
+        "mc_stm_types.h": "c",
+        "stm32g4xx_ll_usart.h": "c",
+        "stm32g4xx_ll_spi.h": "c",
+        "stm32g4xx_hal.h": "c",
+        "stm32g4xx_hal_conf.h": "c",
+        "stm32g4xx_ll_fmac.h": "c",
+        "stm32g4xx.h": "c",
+        "__functional_03": "c",
+        "functional": "c",
+        "__locale": "c",
+        "valarray": "c",
+        "pwm_curr_fdbk.h": "c"
+    },
+    "git.ignoreLimitWarning": true,
+    "editor.formatOnSave": true
+}
