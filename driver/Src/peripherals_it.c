@@ -204,20 +204,18 @@ void FDCAN1_IT1_IRQHandler(void)
 void TIM1_UP_TIM16_IRQHandler(void)
 {
     /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 0 */
-    // static uint32_t start_time = 0, stop_time = 0;
+    static uint32_t start_time = 0, stop_time = 0;
     /* USER CODE END TIM1_UP_TIM16_IRQn 0 */
     HAL_TIM_IRQHandler(&htim1);
     /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 1 */
 
     if (NULL != cb_) {
-        // start_time = Micros();
+        start_time = Micros();
         cb_();
-        // stop_time = Micros();
+        stop_time = Micros();
     }
 
-#if (__FPU_USED == 1)
-    // LOG_ERR("%d\n", stop_time - start_time);
-#endif
+    LOG_ERR("%d\n", stop_time - start_time);
 
     /* USER CODE END TIM1_UP_TIM16_IRQn 1 */
 }

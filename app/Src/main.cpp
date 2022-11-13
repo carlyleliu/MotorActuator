@@ -12,9 +12,7 @@
 #include <impl_pwm.hpp>
 #include <impl_adc.hpp>
 
-#include <driver.h>
-
-PM3505 pm3505;
+PM3505* pm3505_ptr = nullptr;
 ImplPwm* pwm0_ptr = nullptr;
 ImplPwm* pwm1_ptr = nullptr;
 ImplPwm* pwm2_ptr = nullptr;
@@ -22,7 +20,7 @@ AbsoluteAngleEncoder* encoder_ptr = nullptr;
 
 int MotorControlInit(void)
 {
-    BldcMotor& pm3505_bldc = pm3505.Create();
+    BldcMotor& pm3505_bldc = pm3505_ptr->Create();
 
     pwm0_ptr = new(ImplPwm);
     pwm0_ptr->Init(0);
@@ -34,16 +32,9 @@ int MotorControlInit(void)
     encoder_ptr = new(AbsoluteAngleEncoder);
     encoder_ptr->Init();
 
-    pwm0_ptr->pwm_input_port_.ConnectTo(&pm3505_bldc.pwm_phase_u_);
-    pwm1_ptr->pwm_input_port_.ConnectTo(&pm3505_bldc.pwm_phase_v_);
-    pwm2_ptr->pwm_input_port_.ConnectTo(&pm3505_bldc.pwm_phase_w_);
-    pm3505_bldc.normalize_angle_measure_.ConnectTo(&encoder_ptr->normalize_angle_measure_);
-    pm3505_bldc.velocity_measure_.ConnectTo(&encoder_ptr->velocity_measure_);
-    pm3505_bldc.sensor_update_time_.ConnectTo(&encoder_ptr->sensor_update_time_);
-
     pm3505_bldc.SetControlType(MOTOR_CONTROL_TYPE_SPEES);
     //pm3505_bldc.SetTorque(0.5);
-    pm3505_bldc.SetVelocity(-60);
+    pm3505_bldc.SetVelocity(30);
 
     LOG_INF("init finished\n");
 
@@ -52,14 +43,6 @@ int MotorControlInit(void)
 
 int MotorControlDeInit(void)
 {
-    BldcMotor& pm3505_bldc = pm3505.Create();
-
-    pwm0_ptr->pwm_input_port_.DisConnect();
-    pwm1_ptr->pwm_input_port_.DisConnect();
-    pwm2_ptr->pwm_input_port_.DisConnect();
-    pm3505_bldc.normalize_angle_measure_.DisConnect();
-    pm3505_bldc.velocity_measure_.DisConnect();
-
     delete(pwm0_ptr);
     delete(pwm1_ptr);
     delete(pwm2_ptr);
@@ -71,11 +54,20 @@ int MotorControlDeInit(void)
 
 void MotorControlUpdate(void)
 {
-    BldcMotor& pm3505_bldc = pm3505.Create();
+    BldcMotor& pm3505_bldc = pm3505_ptr->Create();
 
     encoder_ptr->Update();
 
+    pm3505_bldc.SetNormalizeAngleMeasure(encoder_ptr->GetNormalizeAngleMeasure());
+    pm3505_bldc.SetVelocityMeasure(encoder_ptr->GetVelocityMeasure());
+    pm3505_bldc.SetSensorUpdateTime(encoder_ptr->GetSensorUpdateTime());
+
     pm3505_bldc.MotorTask();
+
+    pwm0_ptr->SetPwmPlus(pm3505_bldc.GetPhaseU());
+    pwm1_ptr->SetPwmPlus(pm3505_bldc.GetPhaseV());
+    pwm2_ptr->SetPwmPlus(pm3505_bldc.GetPhaseW());
+
     pwm0_ptr->Update();
     pwm1_ptr->Update();
     pwm2_ptr->Update();
@@ -92,14 +84,16 @@ int main(void)
 
     PeripheralsInit();
 
+    PM3505 pm3505;
+    pm3505_ptr = &pm3505;
+
     MotorControlInit();
 
     SetItCb(MotorControlUpdate);
 
     while (1) {
-        //MotorControlUpdate();
         HAL_Delay(1000);
     }
 
-    MotorControlDeInit();
+    //MotorControlDeInit();
 }

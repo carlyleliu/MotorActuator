@@ -11,25 +11,6 @@ DcMotor::DcMotor() :
 {
     motor_control_type_ = MOTOR_CONTROL_TYPE_SPEES;
     positive_pwm_ = 0;
-
-    /* Nothiong to do
-    fsm_.Bind(MOTOR_CONTROL_TYPE_IDLE, STATE_INIT_EVENT) = [&](const Fsm::fsm_args &args) {
-    };
-    fsm_.Bind(MOTOR_CONTROL_TYPE_IDLE, STATE_EXIT_EVENT) = [&](const Fsm::fsm_args &args) {
-    };
-
-    fsm_.Bind(MOTOR_CONTROL_TYPE_SPEES, STATE_INIT_EVENT) = [&](const Fsm::fsm_args &args) {
-    };
-    fsm_.Bind(MOTOR_CONTROL_TYPE_SPEES, STATE_EXIT_EVENT) = [&](const Fsm::fsm_args &args) {
-    };
-    */
-
-    fsm_.Bind(MOTOR_CONTROL_TYPE_IDLE, MOTOR_CONTROL_EVENT_SET_SPEES) = [&](const Fsm::fsm_args &args) {
-        ExecuteVelocityControl();
-    };
-    fsm_.Bind(MOTOR_CONTROL_TYPE_SPEES, MOTOR_CONTROL_EVENT_SET_IDLE) = [&](const Fsm::fsm_args &args) {
-        MotorStop();
-    };
 }
 
 /** @brief Motor control destory
@@ -57,9 +38,7 @@ void DcMotor::MotorStart(void)
 void DcMotor::MotorStop(void)
 {
     positive_pwm_ = 0;
-    positive_pwm_.Reset();
     negative_pwm_ = 0;
-    negative_pwm_.Reset();
 }
 
 /** @brief Motor control run

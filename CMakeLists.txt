@@ -79,7 +79,8 @@ add_subdirectory(${PROJ_HAL_PATH} ${CMAKE_BINARY_DIR}/Drivers/STM32G4xx_HAL_Driv
 add_subdirectory(${PROJ_THIRDPART_PATH} ${CMAKE_BINARY_DIR}/thirdparty)
 add_subdirectory(${PROJ_DRIVER_PATH} ${CMAKE_BINARY_DIR}/drivers)
 add_subdirectory(${PROJ_DEVICE_PATH} ${CMAKE_BINARY_DIR}/device)
-add_subdirectory(${PROJ_UTIL_PATH} ${CMAKE_BINARY_DIR}/util)
+
+# add_subdirectory(${PROJ_UTIL_PATH} ${CMAKE_BINARY_DIR}/util)
 add_subdirectory(${PROJ_ALGORITHM_PATH} ${CMAKE_BINARY_DIR}/algorithm)
 add_subdirectory(${PROJ_MIDDLEWARE_PATH} ${CMAKE_BINARY_DIR}/middlewares)
 add_subdirectory(${PROJ_FRAMEWORK_PATH} ${CMAKE_BINARY_DIR}/framework)
@@ -118,7 +119,6 @@ target_compile_definitions(${ELF_TARGET} PUBLIC
 )
 
 target_link_libraries(${ELF_TARGET} PUBLIC
-    util
     algorithm
     framework
     -lc

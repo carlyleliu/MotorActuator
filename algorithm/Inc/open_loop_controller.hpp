@@ -1,15 +1,12 @@
 #ifndef __OPEN_LOOP_CONTROLLER_HPP__
 #define __OPEN_LOOP_CONTROLLER_HPP__
 
-#include <component_port.hpp>
 #include <algorithm_utils.hpp>
 #include <foc_controller.hpp>
 #include <absolute_encoder.hpp>
 
 #include <cmath>
 #include <utility>
-
-#include <time_util.h>
 
 #include <driver.h>
 #include <syslog.h>
@@ -89,10 +86,10 @@ class OpenLoopController
     float GetTargetPhaseVelocity(void) {
         return phase_velocity_target_;
     };
-    std::optional<float2D> GetIdqTarget(void) {
+    std::array<float, 2>& GetIdqTarget(void) {
         return i_dq_target_;
     };
-    std::optional<float2D> GetVdqTarget(void) {
+    std::array<float, 2>& GetVdqTarget(void) {
         return v_dq_target_;
     };
 
@@ -112,8 +109,9 @@ class OpenLoopController
     /* Output */
     float phase_target_;
     float phase_velocity_target_;
-    std::optional<float2D> i_dq_target_;
-    std::optional<float2D> v_dq_target_;
+
+    std::array<float, 2> i_dq_target_;
+    std::array<float, 2> v_dq_target_;
 };
 
 #endif // ! __OPEN_LOOP_CONTROLLER_HPP__

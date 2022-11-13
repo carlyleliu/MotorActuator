@@ -4,8 +4,6 @@
 
 #include <driver.h>
 
-#include <time_util.h>
-
 union AdcValue
 {
     uint16_t adc_16bit_value_[2];

@@ -27,13 +27,11 @@ int ImplPwm::Update(void)
 {
     uint32_t pwm_pulse = 0;
 
-    std::optional<float> normalize_pwm = pwm_input_port_.GetAlways();
-    pwm_pulse = (*normalize_pwm) * peripord_;
+    pwm_pulse = pwm_input_ * peripord_;
 
-    if (normalize_pwm.has_value()) {
-        __HAL_TIM_SetCompare(tim_handle_, channel_, pwm_pulse);
-        LOG_DBG("pwm_pulse[%d]\n", pwm_pulse);
-    }
+    __HAL_TIM_SetCompare(tim_handle_, channel_, pwm_pulse);
+
+    LOG_DBG("pwm_pulse[%d]\n", pwm_pulse);
 
     return 0;
 }

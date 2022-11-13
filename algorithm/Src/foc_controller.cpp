@@ -39,15 +39,13 @@ void FieldOrientedController::FocClark(void)
  *                       beta = -(2*b+a)/sqrt(3)
  * @retval Stator values alpha and beta in alphabeta_t format
  */
-void FieldOrientedController::FocClark(std::optional<float2D> current)
+void FieldOrientedController::FocClark(std::array<float, 2>& current)
 {
     // Clarke transform
-    if (current.has_value()) {
-        i_alpha_beta_measured_ = {
-            current->first,
-            kDivSqrt3_ * (-2 * current->second - current->first)
-        };
-    }
+    i_alpha_beta_measured_ = {
+        current[0],
+        kDivSqrt3_ * (-2 * current[1] - current[0])
+    };
 }
 
 /**
@@ -61,15 +59,16 @@ void FieldOrientedController::FocClark(std::optional<float2D> current)
  */
 void FieldOrientedController::FocPark(float theta)
 {
-    if (i_alpha_beta_measured_.has_value()) {
-        auto [i_alpha, i_beta] = *i_alpha_beta_measured_;
-        float cos_theta = arm_cos_f32(theta);
-        float sin_theta = arm_sin_f32(theta);
-        i_dq_measured_ = {
-            i_alpha * cos_theta + i_beta * sin_theta,
-            -i_alpha * sin_theta + i_beta * cos_theta,
-        };
-    }
+    float i_alpha = i_alpha_beta_measured_[0];
+    float i_beta = i_alpha_beta_measured_[1];
+
+    float cos_theta = arm_cos_f32(theta);
+    float sin_theta = arm_sin_f32(theta);
+
+    i_dq_measured_ = {
+        i_alpha * cos_theta + i_beta * sin_theta,
+        -i_alpha * sin_theta + i_beta * cos_theta,
+    };
 }
 
 /**
@@ -81,12 +80,14 @@ void FieldOrientedController::FocPark(float theta)
  * @param  theta: rotating frame angular position
  * @retval Stator voltage Valpha and Vbeta in qd_t format
  */
-void FieldOrientedController::FocRevPark(std::optional<float2D> v_dq, float theta)
+void FieldOrientedController::FocRevPark(std::array<float, 2>& v_dq, float theta)
 {
-    auto [mod_d, mod_q] = *v_dq;
+    float mod_d = v_dq[0];
+    float mod_q = v_dq[1];
 
     float cos_theta = arm_cos_f32(theta);
     float sin_theta = arm_sin_f32(theta);
+
     v_alpha_beta_target_ = {
         mod_d * cos_theta - mod_q * sin_theta,
         mod_d * sin_theta + mod_q * cos_theta
@@ -99,18 +100,13 @@ void FieldOrientedController::FocRevPark(std::optional<float2D> v_dq, float thet
  *        The magnitude of the alpha-beta vector may not be larger than sqrt(3)/2
  * @retval 3 phase pwm and returns true on success, and false if the input was out of range
  */
-std::tuple<float, float, float, bool> FieldOrientedController::FocSVM(void)
+bool FieldOrientedController::FocSVM(float* tA, float* tB, float* tC)
 {
-    float tA, tB, tC;
+    // float tA, tB, tC;
     int Sextant;
 
-    if (!v_alpha_beta_target_.has_value() || __builtin_isnan(v_alpha_beta_target_->first) \
-        || __builtin_isnan(v_alpha_beta_target_->second)) {
-        return {0, 0, 0, false};
-    }
-
-    float alpha = v_alpha_beta_target_->first;
-    float beta = v_alpha_beta_target_->second;
+    float alpha = v_alpha_beta_target_[0];
+    float beta = v_alpha_beta_target_[1];
 
     if (beta >= 0.0f) {
         if (alpha >= 0.0f) {
@@ -150,9 +146,9 @@ std::tuple<float, float, float, bool> FieldOrientedController::FocSVM(void)
             float t2 = kDivTwoSqrt3_ * beta;
 
             // PWM timings
-            tA = (1.0f - t1 - t2) * 0.5f;
-            tB = tA + t1;
-            tC = tB + t2;
+            *tA = (1.0f - t1 - t2) * 0.5f;
+            *tB = *tA + t1;
+            *tC = *tB + t2;
         } break;
 
         // sextant v2-v3
@@ -162,9 +158,9 @@ std::tuple<float, float, float, bool> FieldOrientedController::FocSVM(void)
             float t3 = -alpha + kDivSqrt3_ * beta;
 
             // PWM timings
-            tB = (1.0f - t2 - t3) * 0.5f;
-            tA = tB + t3;
-            tC = tA + t2;
+            *tB = (1.0f - t2 - t3) * 0.5f;
+            *tA = *tB + t3;
+            *tC = *tA + t2;
         } break;
 
         // sextant v3-v4
@@ -174,9 +170,9 @@ std::tuple<float, float, float, bool> FieldOrientedController::FocSVM(void)
             float t4 = -alpha - kDivSqrt3_ * beta;
 
             // PWM timings
-            tB = (1.0f - t3 - t4) * 0.5f;
-            tC = tB + t3;
-            tA = tC + t4;
+            *tB = (1.0f - t3 - t4) * 0.5f;
+            *tC = *tB + t3;
+            *tA = *tC + t4;
         } break;
 
         // sextant v4-v5
@@ -186,9 +182,9 @@ std::tuple<float, float, float, bool> FieldOrientedController::FocSVM(void)
             float t5 = -kDivTwoSqrt3_ * beta;
 
             // PWM timings
-            tC = (1.0f - t4 - t5) * 0.5f;
-            tB = tC + t5;
-            tA = tB + t4;
+            *tC = (1.0f - t4 - t5) * 0.5f;
+            *tB = *tC + t5;
+            *tA = *tB + t4;
         } break;
 
         // sextant v5-v6
@@ -198,9 +194,9 @@ std::tuple<float, float, float, bool> FieldOrientedController::FocSVM(void)
             float t6 = alpha - kDivSqrt3_ * beta;
 
             // PWM timings
-            tC = (1.0f - t5 - t6) * 0.5f;
-            tA = tC + t5;
-            tB = tA + t6;
+            *tC = (1.0f - t5 - t6) * 0.5f;
+            *tA = *tC + t5;
+            *tB = *tA + t6;
         } break;
 
         // sextant v6-v1
@@ -210,16 +206,16 @@ std::tuple<float, float, float, bool> FieldOrientedController::FocSVM(void)
             float t1 = alpha + kDivSqrt3_ * beta;
 
             // PWM timings
-            tA = (1.0f - t6 - t1) * 0.5f;
-            tC = tA + t1;
-            tB = tC + t6;
+            *tA = (1.0f - t6 - t1) * 0.5f;
+            *tC = *tA + t1;
+            *tB = *tC + t6;
         } break;
     }
 
     bool result_valid =
-            tA >= 0.0f && tA <= 1.0f
-         && tB >= 0.0f && tB <= 1.0f
-         && tC >= 0.0f && tC <= 1.0f;
+            *tA >= 0.0f && *tA <= 1.0f
+         && *tB >= 0.0f && *tB <= 1.0f
+         && *tC >= 0.0f && *tC <= 1.0f;
 
-    return {tA, tB, tC, result_valid};
+    return result_valid;
 }

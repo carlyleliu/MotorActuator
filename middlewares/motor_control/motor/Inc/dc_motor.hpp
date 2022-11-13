@@ -21,8 +21,8 @@ class DcMotor : public MotorAbstract
   private:
     PidController pid_controller_;
   public:
-    OutputPort<float> positive_pwm_;
-    OutputPort<float> negative_pwm_;
+    float positive_pwm_;
+    float negative_pwm_;
 };
 
 #endif // ! __MIDDLEWARE_MOTOR_CONTROL_DC_MOTOR_HPP__

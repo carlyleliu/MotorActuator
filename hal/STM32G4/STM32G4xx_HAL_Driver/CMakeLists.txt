@@ -95,7 +95,7 @@ set(STM32_LL_SRC
 )
 
 if(USE_HAL_LIB)
-    set(HAL_SRC ${STM32_HAL_SRC})
+    set(HAL_SRC ${STM32_HAL_SRC} ${STM32_LL_SRC})
 else()
     set(HAL_SRC ${STM32_LL_SRC})
 endif()

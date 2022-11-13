@@ -5,7 +5,6 @@
 #include <limits>
 #include <algorithm>
 #include <array>
-#include <tuple>
 #include <cmath>
 
 constexpr float kPI_ = 3.14159265358979323846f;

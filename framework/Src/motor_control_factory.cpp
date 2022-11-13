@@ -3,12 +3,10 @@
 PM3505::PM3505()
 {
     created = false;
-    motor_ = new(BldcMotor);
 }
 
 PM3505::~PM3505()
 {
-    delete(motor_);
 }
 
 /**
@@ -19,16 +17,16 @@ PM3505::~PM3505()
 BldcMotor& PM3505::Create(void)
 {
     if (created) {
-        return *motor_;
+        return motor_;
     }
-    MotorConfig_t& conf = motor_->GetConfig();
-    MotorControllerConfig_t& controller = motor_->GetControllerConfig();
+    MotorConfig_t& conf = motor_.GetConfig();
+    MotorControllerConfig_t& controller = motor_.GetControllerConfig();
 
-    PidController& velocity_pid = motor_->GetVelocityPidHandler();
-    PidController& position_pid = motor_->GetPositionPidHandler();
+    PidController& velocity_pid = motor_.GetVelocityPidHandler();
+    PidController& position_pid = motor_.GetPositionPidHandler();
 
-    PidController& q_axis_pid = motor_->GetQAxisCurrentPidHandler();
-    PidController& d_axis_pid = motor_->GetDAxisCurrentPidHandler();
+    PidController& q_axis_pid = motor_.GetQAxisCurrentPidHandler();
+    PidController& d_axis_pid = motor_.GetDAxisCurrentPidHandler();
 
     conf.pole_pairs_ = 11;
     conf.torque_constant_ = 0.09;
@@ -78,5 +76,5 @@ BldcMotor& PM3505::Create(void)
 
     created = true;
 
-    return *motor_;
+    return motor_;
 }

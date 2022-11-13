@@ -13,7 +13,7 @@ class MotorFactory
 
   protected:
     bool created;
-    BldcMotor* motor_;
+    BldcMotor motor_;
 };
 
 class PM3505 : public MotorFactory

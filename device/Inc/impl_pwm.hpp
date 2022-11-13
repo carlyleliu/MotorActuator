@@ -2,13 +2,7 @@
 #define __DEVICE_PWM_DEVICE_HPP__
 
 #include <driver.h>
-
-#include <observer.hpp>
-#include <component_port.hpp>
-
-using namespace DesignedPatterns;
-
-class ImplPwm : public Observer
+class ImplPwm
 {
   public:
     ImplPwm() {};
@@ -18,12 +12,15 @@ class ImplPwm : public Observer
     void Test(void);
 
   public:
-    InputPort<float> pwm_input_port_;
+    void SetPwmPlus(float pwm) {
+        pwm_input_ = pwm;
+    };
 
   private:
+    TIM_HandleTypeDef* tim_handle_;
+    float pwm_input_;
     uint16_t peripord_;
     uint16_t channel_;
-    TIM_HandleTypeDef* tim_handle_;
 };
 
 #endif // ! __DEVICE_PWM_DEVICE_HPP__

@@ -52,8 +52,8 @@ class BldcMotor : public MotorAbstract
     enum BldcMotorType bldc_type_;
     bool enable_current_control_;
 
-    std::optional<float2D> v_dq_target_;
-    std::optional<float2D> i_dq_target_;
+    std::array<float, 2> v_dq_target_;
+    std::array<float, 2> i_dq_target_;
 
     FieldOrientedController foc_;
 

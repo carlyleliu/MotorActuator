@@ -5,12 +5,9 @@
 
 #include <algorithm>
 
-#include <component_port.hpp>
 #include <pid_controller.hpp>
 #include <foc_controller.hpp>
 #include <absolute_encoder.hpp>
-
-#include <fsm.hpp>
 
 class PidController;
 
@@ -191,8 +188,30 @@ class MotorAbstract
         return motor_controller_conf_;
     };
 
-    void SendMotorControlEvent(enum MotorControlEvent event) {
-        fsm_.Event(event);
+    void SetPositionMeasure(float pos) {
+        position_measure_ = pos;
+    };
+    void SetVelocityMeasure(float vel) {
+        velocity_measure_ = vel;
+    };
+    void SetNormalizeAngleMeasure(float angle) {
+        normalize_angle_measure_ = angle;
+    };
+    void SetSensorUpdateTime(float time) {
+        sensor_update_time_ = time;
+    };
+    void SetCurrent(std::array<float, 2>& current) {
+        current_measure_ = current;
+    };
+
+    float GetPhaseU(void) {
+        return pwm_phase_u_;
+    };
+    float GetPhaseV(void) {
+        return pwm_phase_v_;
+    };
+    float GetPhaseW(void) {
+        return pwm_phase_w_;
     };
 
   public:
@@ -215,21 +234,19 @@ class MotorAbstract
     float velocity_estimate_;
     float normalize_angle_estimate_;
 
-    Fsm::StateMachine fsm_;
-
   public:
     /* Inputs */
-    InputPort<float> position_measure_;
-    InputPort<float> velocity_measure_;
-    InputPort<float> normalize_angle_measure_;
+    float position_measure_;
+    float velocity_measure_;
+    float normalize_angle_measure_;
 
-    InputPort<float> sensor_update_time_;
-    InputPort<float2D> current_measure_;
+    float sensor_update_time_;
+    std::array<float, 2> current_measure_;
 
     /* Output */
-    OutputPort<float> pwm_phase_u_;
-    OutputPort<float> pwm_phase_v_;
-    OutputPort<float> pwm_phase_w_;
+    float pwm_phase_u_;
+    float pwm_phase_v_;
+    float pwm_phase_w_;
 };
 
 #endif // !__MIDDLEWARE_MOTOR_CONTROL_MOTOR_ABSTRACR_HPP__

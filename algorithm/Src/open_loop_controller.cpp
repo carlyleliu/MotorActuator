@@ -8,11 +8,15 @@
  */
 void OpenLoopController::Update(void)
 {
-    auto [prev_id, prev_iq] = *i_dq_target_;
-    auto [prev_vd, prev_vq] = *v_dq_target_;
+    float prev_id = i_dq_target_[0];
+    float prev_iq = i_dq_target_[1];
+
+    float prev_vd = v_dq_target_[0];
+    float prev_vq = v_dq_target_[1];
 
     (void)prev_iq; // unused
     (void)prev_vq; // unused
+    (void)prev_vd; // unused
 
     float dt = 0.001;
 

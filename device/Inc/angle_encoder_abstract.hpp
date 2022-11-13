@@ -4,12 +4,9 @@
 #include <driver.h>
 #include <syslog.h>
 
-#include <time_util.h>
-
 #include <cmath>
 #include <algorithm_utils.hpp>
 #include <algorithm>
-#include <component_port.hpp>
 
 class AngleEncoderAbstract {
   public:
@@ -46,6 +43,15 @@ class AngleEncoderAbstract {
     float GetTime(void) {
         return time_;
     };
+    float GetNormalizeAngleMeasure(void) {
+        return normalize_angle_measure_;
+    };
+    float GetVelocityMeasure(void) {
+        return velocity_measure_;
+    };
+    float GetSensorUpdateTime(void) {
+        return sensor_update_time_;
+    };
 
   protected:
     float time_;
@@ -62,10 +68,9 @@ class AngleEncoderAbstract {
     uint8_t inited_ : 1;
     uint8_t aligned_ : 1;
 
-  public:
-    OutputPort<float> normalize_angle_measure_; // [rad]
-    OutputPort<float> velocity_measure_;        // [rad/s]
-    OutputPort<float> sensor_update_time_;      // [s]
+    float normalize_angle_measure_; // [rad]
+    float velocity_measure_;        // [rad/s]
+    float sensor_update_time_;      // [s]
 };
 
 #endif  // ! __MIDDLEWARE_SENSOR_ANGLE_ENCODER_ABSTRACT_HPP__

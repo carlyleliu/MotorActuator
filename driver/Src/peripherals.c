@@ -271,6 +271,8 @@ static void SPI1_Init(void)
     if (HAL_SPI_Init(&hspi1) != HAL_OK) {
         Error_Handler();
     }
+    //__HAL_SPI_ENABLE_IT(&SPI3_Handler, SPI_IT_TXE);
+    //__HAL_SPI_ENABLE_IT(&hspi1, SPI_IT_RXNE);
 }
 
 /**
