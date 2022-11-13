@@ -7,8 +7,6 @@ set(STM32_HAL_SRC
     Src/stm32g4xx_hal_cortex.c
     Src/stm32g4xx_hal_crc.c
     Src/stm32g4xx_hal_crc_ex.c
-    Src/stm32g4xx_hal_cryp.c
-    Src/stm32g4xx_hal_cryp_ex.c
     Src/stm32g4xx_hal_dac.c
     Src/stm32g4xx_hal_dac_ex.c
     Src/stm32g4xx_hal_dma.c
@@ -23,29 +21,13 @@ set(STM32_HAL_SRC
     Src/stm32g4xx_hal_hrtim.c
     Src/stm32g4xx_hal_i2c.c
     Src/stm32g4xx_hal_i2c_ex.c
-    Src/stm32g4xx_hal_i2s.c
-    Src/stm32g4xx_hal_irda.c
-    Src/stm32g4xx_hal_iwdg.c
-    Src/stm32g4xx_hal_lptim.c
     Src/stm32g4xx_hal_msp_template.c
-    Src/stm32g4xx_hal_nand.c
-    Src/stm32g4xx_hal_nor.c
     Src/stm32g4xx_hal_opamp.c
     Src/stm32g4xx_hal_opamp_ex.c
-    Src/stm32g4xx_hal_pcd.c
-    Src/stm32g4xx_hal_pcd_ex.c
     Src/stm32g4xx_hal_pwr.c
     Src/stm32g4xx_hal_pwr_ex.c
-    Src/stm32g4xx_hal_qspi.c
     Src/stm32g4xx_hal_rcc.c
     Src/stm32g4xx_hal_rcc_ex.c
-    Src/stm32g4xx_hal_rng.c
-    Src/stm32g4xx_hal_rtc.c
-    Src/stm32g4xx_hal_rtc_ex.c
-    Src/stm32g4xx_hal_sai.c
-    Src/stm32g4xx_hal_sai_ex.c
-    Src/stm32g4xx_hal_smartcard.c
-    Src/stm32g4xx_hal_smartcard_ex.c
     Src/stm32g4xx_hal_smbus.c
     Src/stm32g4xx_hal_spi.c
     Src/stm32g4xx_hal_spi_ex.c
@@ -61,6 +43,28 @@ set(STM32_HAL_SRC
     system_stm32g4xx.c
     startup_stm32g431xx.s
 )
+
+set(STM32_HAL_EXT_SRC
+    Src/stm32g4xx_hal_i2s.c
+    Src/stm32g4xx_hal_irda.c
+    Src/stm32g4xx_hal_iwdg.c
+    Src/stm32g4xx_hal_lptim.c
+    Src/stm32g4xx_hal_sai.c
+    Src/stm32g4xx_hal_sai_ex.c
+    Src/stm32g4xx_hal_smartcard.c
+    Src/stm32g4xx_hal_smartcard_ex.c
+    Src/stm32g4xx_hal_nand.c
+    Src/stm32g4xx_hal_nor.c
+    Src/stm32g4xx_hal_pcd.c
+    Src/stm32g4xx_hal_pcd_ex.c
+    Src/stm32g4xx_hal_qspi.c
+    Src/stm32g4xx_hal_rtc.c
+    Src/stm32g4xx_hal_rtc_ex.c
+    Src/stm32g4xx_hal_cryp.c
+    Src/stm32g4xx_hal_cryp_ex.c
+    Src/stm32g4xx_hal_rng.c
+)
+
 set(STM32_LL_SRC
     Src/stm32g4xx_ll_adc.c
     Src/stm32g4xx_ll_comp.c
@@ -91,7 +95,7 @@ set(STM32_LL_SRC
 )
 
 if(USE_HAL_LIB)
-    set(HAL_SRC ${STM32_HAL_SRC} ${STM32_LL_SRC})
+    set(HAL_SRC ${STM32_HAL_SRC})
 else()
     set(HAL_SRC ${STM32_LL_SRC})
 endif()

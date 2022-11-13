@@ -17,7 +17,7 @@ class AngleEncoderAbstract {
         time_(0.0f),
         angle_measure_prev_(0),
         angle_measure_(0),
-        angle_offset_(1300), //1180
+        angle_offset_(1900), //1180
         rotate_direction_(1),
         mechanical_to_phase_direction_(-1),
         circle_counter_(0),

@@ -12,6 +12,7 @@ void SysTicksInit(void);
 void DelayUs(uint32_t nus);
 void DelayMs(uint16_t nms);
 uint32_t Micros(void);
+float time(void);
 
 #ifdef __cplusplus
 }

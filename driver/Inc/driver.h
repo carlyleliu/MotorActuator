@@ -16,6 +16,7 @@ extern "C" {
 #include "tle5012b.h"
 #include "usart.h"
 #include "util.h"
+#include "peripherals_it.h"
 
 #ifdef __cplusplus
 }

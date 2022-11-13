@@ -19,6 +19,11 @@ class ImplPwm : public Observer
 
   public:
     InputPort<float> pwm_input_port_;
+
+  private:
+    uint16_t peripord_;
+    uint16_t channel_;
+    TIM_HandleTypeDef* tim_handle_;
 };
 
 #endif // ! __DEVICE_PWM_DEVICE_HPP__

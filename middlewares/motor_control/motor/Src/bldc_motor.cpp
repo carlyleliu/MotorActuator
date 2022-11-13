@@ -184,7 +184,7 @@ void BldcMotor::SpeedControl(void)
         float vd = 0.0f;
         float vq = 0.0f;
         vq = velocity_pid_.PIDController(velocity_err);
-        vq = std::clamp(vq, -motor_conf_.nominal_voltage_/2, motor_conf_.nominal_voltage_/2);
+        vq = std::clamp(vq, -motor_conf_.nominal_voltage_ / 2, motor_conf_.nominal_voltage_ / 2);
         v_dq_target_ = {vd, vq};
     } else {
         motor_controller_conf_.target_torque_ = velocity_pid_.PIController(velocity_err);

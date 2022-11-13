@@ -61,7 +61,7 @@ BldcMotor& PM3505::Create(void)
     controller.vbus_measured_ = 12;
 
     velocity_pid.SetKp(0.01);
-    velocity_pid.SetKi(0.001);
+    velocity_pid.SetKi(0.01);
     velocity_pid.SetKd(0.0);
 
     position_pid.SetKp(10);

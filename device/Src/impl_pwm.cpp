@@ -1,7 +1,10 @@
 #include <impl_pwm.hpp>
 
-/* define pwm channel num */
-constexpr uint8_t kPwmDeviceNum = 4;
+/* tim1 & tim8 */
+static uint16_t kTimxChannelMap[2][6] = {
+    {TIM_CHANNEL_1, TIM_CHANNEL_2, TIM_CHANNEL_3, TIM_CHANNEL_4, TIM_CHANNEL_5, TIM_CHANNEL_6},
+    {TIM_CHANNEL_1, TIM_CHANNEL_2, TIM_CHANNEL_3, TIM_CHANNEL_4, TIM_CHANNEL_5, TIM_CHANNEL_6}
+};
 
 /**
  * @brief init pwm device struct
@@ -9,6 +12,10 @@ constexpr uint8_t kPwmDeviceNum = 4;
  */
 int ImplPwm::Init(uint8_t idx)
 {
+    tim_handle_ = &htim1;
+    channel_ = kTimxChannelMap[0][idx];
+    peripord_ = 4250; //(170000000 / 20000 / 2)
+
     return -1;
 }
 
@@ -21,8 +28,10 @@ int ImplPwm::Update(void)
     uint32_t pwm_pulse = 0;
 
     std::optional<float> normalize_pwm = pwm_input_port_.GetAlways();
+    pwm_pulse = (*normalize_pwm) * peripord_;
 
     if (normalize_pwm.has_value()) {
+        __HAL_TIM_SetCompare(tim_handle_, channel_, pwm_pulse);
         LOG_DBG("pwm_pulse[%d]\n", pwm_pulse);
     }
 

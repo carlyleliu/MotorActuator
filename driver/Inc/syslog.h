@@ -30,7 +30,7 @@ extern "C" {
 #endif
 
 #ifndef CONFIG_LOG_LEVEL
-#define CONFIG_LOG_LEVEL SYS_LOG_DEBUG
+#define CONFIG_LOG_LEVEL SYS_LOG_WARNING
 //#define CONFIG_LOG_LEVEL SYS_LOG_CLOSE
 #endif
 

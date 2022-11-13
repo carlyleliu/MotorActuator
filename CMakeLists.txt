@@ -118,13 +118,8 @@ target_compile_definitions(${ELF_TARGET} PUBLIC
 )
 
 target_link_libraries(${ELF_TARGET} PUBLIC
-    cmsis
-    hal
-    driver
     util
-    device
     algorithm
-    middleware
     framework
     -lc
     -lm

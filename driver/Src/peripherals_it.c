@@ -19,12 +19,21 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "peripherals_it.h"
+#include "syslog.h"
+#include "systicks.h"
 
 /* External variables --------------------------------------------------------*/
 extern FDCAN_HandleTypeDef hfdcan1;
 extern SPI_HandleTypeDef hspi1;
 extern TIM_HandleTypeDef htim1;
 /* USER CODE BEGIN EV */
+
+static it_call_back cb_ = NULL;
+
+void SetItCb(it_call_back cb)
+{
+    cb_ = cb;
+}
 
 /* USER CODE END EV */
 
@@ -195,10 +204,20 @@ void FDCAN1_IT1_IRQHandler(void)
 void TIM1_UP_TIM16_IRQHandler(void)
 {
     /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 0 */
-
+    // static uint32_t start_time = 0, stop_time = 0;
     /* USER CODE END TIM1_UP_TIM16_IRQn 0 */
     HAL_TIM_IRQHandler(&htim1);
     /* USER CODE BEGIN TIM1_UP_TIM16_IRQn 1 */
+
+    if (NULL != cb_) {
+        // start_time = Micros();
+        cb_();
+        // stop_time = Micros();
+    }
+
+#if (__FPU_USED == 1)
+    // LOG_ERR("%d\n", stop_time - start_time);
+#endif
 
     /* USER CODE END TIM1_UP_TIM16_IRQn 1 */
 }

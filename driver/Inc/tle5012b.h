@@ -8,8 +8,8 @@ extern "C" {
 #include "peripherals.h"
 
 /* port gpt diff platform */
-#define GPIO_CS_Pin_Name GPIO_PIN_1
-#define GPIO_CS_Pin_Type GPIOB
+#define GPIO_CS_Pin_Name GPIO_PIN_4
+#define GPIO_CS_Pin_Type GPIOA
 
 #define SPI_CS_ENABLE  HAL_GPIO_WritePin(GPIO_CS_Pin_Type, GPIO_CS_Pin_Name, GPIO_PIN_RESET)
 #define SPI_CS_DISABLE HAL_GPIO_WritePin(GPIO_CS_Pin_Type, GPIO_CS_Pin_Name, GPIO_PIN_SET)

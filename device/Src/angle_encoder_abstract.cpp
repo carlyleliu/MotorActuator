@@ -85,6 +85,8 @@ int AngleEncoderAbstract::Update(void)
 
     angle_measure_prev_ = angle_measure_;
 
+    LOG_INF("ori_angle = %d angle = %f velocity = %f time = %f\n", angle_measure_, (angle_measure_ / 65536.0) * 2 * kPI_, (delta_mechanical_angle / 65536.0) * 2 * kPI_ / dt, current_time);
+
     return 0;
 }
 

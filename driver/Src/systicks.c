@@ -1,4 +1,5 @@
 #include "systicks.h"
+#include "syslog.h"
 
 static uint32_t us_ticks = 0; /* system clock is 72Mhz */
 
@@ -58,13 +59,19 @@ void DelayMs(uint16_t nms)
  */
 uint32_t Micros(void)
 {
-// TODO
-#define SYSTICK_ADJUST 1
+#define SYSTICK_ADJUST 1000
     register uint32_t ms, cycle_cnt, us_ticks_t;
     do {
         ms = HAL_GetTick();
         cycle_cnt = SysTick->VAL;
     } while (ms != HAL_GetTick());
     us_ticks_t = us_ticks;
-    return (ms * 1000) + (us_ticks_t * SYSTICK_ADJUST - cycle_cnt) / us_ticks_t;
+    return (ms * 1000) + (us_ticks_t * SYSTICK_ADJUST - cycle_cnt - 1) / us_ticks_t;
+}
+
+float time(void)
+{
+    uint32_t cur_us_ticks = Micros();
+
+    return (float)cur_us_ticks / 1000000.0f;
 }

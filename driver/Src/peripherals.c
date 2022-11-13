@@ -1,7 +1,9 @@
 #include "peripherals.h"
+#include "systicks.h"
 
-#define SYSTEM_FREQ 170000000
-#define PWM_FREQ    30000
+#define SYSTEM_FREQ  170000000
+#define PWM_FREQ     20000
+#define CONTROL_FREQ 1000
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
@@ -29,6 +31,7 @@ static void SPI1_Init(void);
 static void TIM1_Init(void);
 static void TIM6_Init(void);
 static void USART1_UART_Init(void);
+static void NVIC_Init(void);
 
 /**
  * @brief System Clock Configuration
@@ -254,9 +257,9 @@ static void SPI1_Init(void)
     hspi1.Instance = SPI1;
     hspi1.Init.Mode = SPI_MODE_MASTER;
     hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-    hspi1.Init.DataSize = SPI_DATASIZE_4BIT;
+    hspi1.Init.DataSize = SPI_DATASIZE_16BIT;
     hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-    hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+    hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
     hspi1.Init.NSS = SPI_NSS_SOFT;
     hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
     hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
@@ -287,10 +290,10 @@ static void TIM1_Init(void)
     /* USER CODE END TIM1_Init 1 */
     htim1.Instance = TIM1;
     htim1.Init.Prescaler = 0;
-    htim1.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED1;
-    htim1.Init.Period = 65535;
+    htim1.Init.CounterMode = TIM_COUNTERMODE_CENTERALIGNED2;
+    htim1.Init.Period = (SYSTEM_FREQ / PWM_FREQ) / 2;
     htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    htim1.Init.RepetitionCounter = 0;
+    htim1.Init.RepetitionCounter = (PWM_FREQ / CONTROL_FREQ) - 1;
     htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
     if (HAL_TIM_Base_Init(&htim1) != HAL_OK) {
         Error_Handler();
@@ -342,6 +345,11 @@ static void TIM1_Init(void)
     }
 
     HAL_TIM_MspPostInit(&htim1);
+
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+    HAL_TIM_Base_Start_IT(&htim1);
 }
 
 /**
@@ -425,9 +433,34 @@ static void GPIO_Init(void)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
+/**
+ * @brief NVIC Configuration.
+ * @retval None
+ */
+void NVIC_Init(void)
+{
+    /* TIM1_UP_IRQn interrupt configuration */
+    HAL_NVIC_SetPriority(TIM1_UP_TIM16_IRQn, 2, 0);
+    HAL_NVIC_EnableIRQ(TIM1_UP_TIM16_IRQn);
+
+    HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(SysTick_IRQn);
+    /* TIM1_BRK_IRQn interrupt configuration */
+    /* DMA1_Channel5_IRQn interrupt configuration */
+    // HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
+    // HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+    /* DMA1_Channel1_IRQn interrupt configuration */
+    // HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+    // HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+    /* USART2_IRQn interrupt configuration */
+    // HAL_NVIC_SetPriority(USART2_IRQn, 3, 1);
+    // HAL_NVIC_EnableIRQ(USART2_IRQn);
+}
+
 void PeripheralsInit(void)
 {
     SystemClockConfig();
+    SysTicksInit();
     GPIO_Init();
     ADC1_Init();
     ADC2_Init();
@@ -439,6 +472,7 @@ void PeripheralsInit(void)
     TIM1_Init();
     TIM6_Init();
     USART1_UART_Init();
+    NVIC_Init();
 }
 
 /**

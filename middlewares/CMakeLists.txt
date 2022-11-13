@@ -13,7 +13,7 @@ include_directories(
 
 add_library(middleware STATIC ${MOTOR_CONTROL_SRC})
 
-target_link_libraries(middleware PUBLIC cmsis hal algorithm driver device)
+target_link_libraries(middleware PUBLIC algorithm device)
 
 target_include_directories(middleware PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/motor_control/chassis/Inc>
