@@ -107,7 +107,7 @@ class MotorAbstract
         control_time_(0.0f),
         position_estimate_(0.0f),
         velocity_estimate_(0.1f),
-        normalize_angle_estimate_(0.0f),
+        angle_estimate_(0.0f),
         pwm_phase_u_(0.0f),
         pwm_phase_v_(0.0f),
         pwm_phase_w_(0.0f)
@@ -195,7 +195,7 @@ class MotorAbstract
         velocity_measure_ = vel;
     };
     void SetNormalizeAngleMeasure(float angle) {
-        normalize_angle_measure_ = angle;
+        angle_measure_ = angle;
     };
     void SetSensorUpdateTime(float time) {
         sensor_update_time_ = time;
@@ -232,13 +232,13 @@ class MotorAbstract
 
     float position_estimate_;
     float velocity_estimate_;
-    float normalize_angle_estimate_;
+    float angle_estimate_;
 
   public:
     /* Inputs */
     float position_measure_;
     float velocity_measure_;
-    float normalize_angle_measure_;
+    float angle_measure_;
 
     float sensor_update_time_;
     std::array<float, 2> current_measure_;

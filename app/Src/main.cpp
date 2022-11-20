@@ -33,8 +33,9 @@ int MotorControlInit(void)
     encoder_ptr->Init();
 
     pm3505_bldc.SetControlType(MOTOR_CONTROL_TYPE_SPEES);
-    //pm3505_bldc.SetTorque(0.5);
-    pm3505_bldc.SetVelocity(30);
+    pm3505_bldc.SetVelocity(10);
+    // pm3505_bldc.SetControlType(MOTOR_CONTROL_TYPE_POSITION);
+    // pm3505_bldc.SetPosition(0);
 
     LOG_INF("init finished\n");
 
@@ -61,6 +62,7 @@ void MotorControlUpdate(void)
     pm3505_bldc.SetNormalizeAngleMeasure(encoder_ptr->GetNormalizeAngleMeasure());
     pm3505_bldc.SetVelocityMeasure(encoder_ptr->GetVelocityMeasure());
     pm3505_bldc.SetSensorUpdateTime(encoder_ptr->GetSensorUpdateTime());
+    pm3505_bldc.SetPositionMeasure(encoder_ptr->GetTotalAngleMeasure());
 
     pm3505_bldc.MotorTask();
 
@@ -92,7 +94,7 @@ int main(void)
     SetItCb(MotorControlUpdate);
 
     while (1) {
-        HAL_Delay(1000);
+        HAL_Delay(2000);
     }
 
     //MotorControlDeInit();

@@ -45,8 +45,8 @@ BldcMotor& PM3505::Create(void)
 
     controller.max_angle_ramp_ = 100;
     controller.max_torque_ramp_ = 10;
-    controller.max_velocity_ramp_ = 300;
-    controller.max_position_ramp_ = 300;
+    controller.max_velocity_ramp_ = 0.2;
+    controller.max_position_ramp_ = 0.1;
     controller.velocity_limit_tolerance_ = 0.99;
     controller.target_angle_ = 0;
     controller.target_torque_ = 0;
@@ -58,13 +58,13 @@ BldcMotor& PM3505::Create(void)
     controller.actual_position_ = 0;
     controller.vbus_measured_ = 12;
 
-    velocity_pid.SetKp(0.01);
-    velocity_pid.SetKi(0.01);
+    velocity_pid.SetKp(0.2);
+    velocity_pid.SetKi(0.02);
     velocity_pid.SetKd(0.0);
 
-    position_pid.SetKp(10);
-    position_pid.SetKi(0.2);
-    position_pid.SetKd(0.05);
+    position_pid.SetKp(2);
+    position_pid.SetKi(0.002);
+    position_pid.SetKd(0.0);
 
     q_axis_pid.SetKp(10);
     q_axis_pid.SetKi(0.2);

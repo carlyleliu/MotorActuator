@@ -2,8 +2,8 @@
 #include "systicks.h"
 
 #define SYSTEM_FREQ  170000000
-#define PWM_FREQ     20000
-#define CONTROL_FREQ 1000
+#define PWM_FREQ     30000
+#define CONTROL_FREQ 10000
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;

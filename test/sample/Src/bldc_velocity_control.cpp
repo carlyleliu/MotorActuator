@@ -34,7 +34,7 @@ int main(void)
     pwm0_ptr->pwm_input_port_.ConnectTo(&pm3505_bldc.pwm_phase_u_);
     pwm1_ptr->pwm_input_port_.ConnectTo(&pm3505_bldc.pwm_phase_v_);
     pwm2_ptr->pwm_input_port_.ConnectTo(&pm3505_bldc.pwm_phase_w_);
-    pm3505_bldc.normalize_angle_measure_.ConnectTo(&encoder_ptr->normalize_angle_measure_);
+    pm3505_bldc.angle_measure_.ConnectTo(&encoder_ptr->angle_measure_);
     pm3505_bldc.velocity_measure_.ConnectTo(&encoder_ptr->velocity_measure_);
     pm3505_bldc.sensor_update_time_.ConnectTo(&encoder_ptr->sensor_update_time_);
 
@@ -56,7 +56,7 @@ int main(void)
     pwm0_ptr->pwm_input_port_.DisConnect();
     pwm1_ptr->pwm_input_port_.DisConnect();
     pwm2_ptr->pwm_input_port_.DisConnect();
-    pm3505_bldc.normalize_angle_measure_.DisConnect();
+    pm3505_bldc.angle_measure_.DisConnect();
     pm3505_bldc.velocity_measure_.DisConnect();
 
     delete(pwm0_ptr);

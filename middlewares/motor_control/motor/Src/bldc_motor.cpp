@@ -163,7 +163,7 @@ int BldcMotor::FocControl(void)
 
     control_time_ = time();
     //float predict_theta = phase + velocity_measure_ * (control_time_ - sensor_update_time_);
-    float predict_theta = normalize_angle_measure_ * motor_conf_.pole_pairs_;
+    float predict_theta = angle_measure_ * motor_conf_.pole_pairs_;
 
     float mod_to_v = (2.0f / 3.0f) * motor_controller_conf_.vbus_measured_;
     float v_to_mod = 1.0f / mod_to_v;

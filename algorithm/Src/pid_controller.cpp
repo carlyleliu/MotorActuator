@@ -20,21 +20,10 @@ void PidController::ResetController(void)
  */
 FloatPoint PidController::PIController(FloatPoint process_var_error)
 {
-    FloatPoint proportional_term_temp, integral_term_temp, integral_sum_temp;
-
-    /* Proportional term computation*/
-    proportional_term_temp = kp_gain_ * process_var_error;
-
     /* Integral term computation */
-    if (ki_gain_ == 0) {
-        integral_term_ = 0;
-    } else {
-        integral_term_temp = ki_gain_ * process_var_error;
-        integral_sum_temp = integral_term_ + integral_term_temp;
-        integral_term_ = integral_sum_temp;
-    }
+    integral_term_ += process_var_error;
 
-    return proportional_term_temp + integral_term_;
+    return kp_gain_ * process_var_error + ki_gain_ * integral_term_;
 }
 
 /**
